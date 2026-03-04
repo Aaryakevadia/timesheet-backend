@@ -1,0 +1,29 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres:15
+    container_name: timesheet_db
+    restart: always
+    environment:
+      POSTGRES_USER: ts_user
+      POSTGRES_PASSWORD: 'MasterPass#1010'
+      POSTGRES_DB: timesheet
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build: .
+    container_name: timesheet_backend
+    depends_on:
+      - db
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    restart: always
+
+volumes:
+  postgres_data:
